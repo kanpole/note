@@ -1,0 +1,7 @@
+* 禁用UAC，使所有操作都默认为管理员
+** HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
+*** 目前最有效
+* 启用管理员账户
+** net user administrator active:yes
+*** 可以开启管理员账户，并登陆
+
