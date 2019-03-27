@@ -1,0 +1,44 @@
+#+TITLE:git的简单使用
+#+AUTHOR:chickbeep
+
+
++ git三种状态：修改，暂存，和已提交；已提交是本机的最终目标
++ .gitingore：可以添加要忽略追踪的文件
++ git命令：
+
+
+|----------------------------------------+-------------------------------------------------------------------------------------------------------|
+| 命令                                   | 描述                                                                                                  |
+|----------------------------------------+-------------------------------------------------------------------------------------------------------|
+| git init/git add -A/git commit         | 在一个目录中使用，可以将一个目录使用git工具来管理                                                     |
+| git config --system/global/local       | 配置信息；system：系统级，所有用户都有效；global：用户级，用户下的所有项目都有效；local：仅此项目有效 |
+| git config --global  core.editor emacs | 设置默认编辑器为emacs                                                                                 |
+| git clone https://xxx.xxx/xxxx [name]  | clone 一个远程项目[重命名目录名]                                                                      |
+| git status [-s]                        | 查看跟踪状态/以简略模式查看                                                                           |
+| git diff [--cached]                    | 将修改的文件和暂存区比对/将修改的文件和本地存储栈比对                                                 |
+| git commit [-v/-m] -a                  | 提交暂存的文件，[带详细信息/简略信息] /跳过git add直接提交                                            |
+| git rm [-f]                            | 删除跟踪的文件和本地文件/若文件已提交到暂存区，但是却手动从本地删除，需要使用 -f选项来强制删除        |
+| git rm --cached                        | 将文件从仓库中删除，但是保留本地                                                                      |
+| git mv                                 | 改名或者移到/这条命令其实相当于执行了移动，删除，暂存三步操作                                         |
+| git log -p -2                          | 查看最近两次的详细提交信息                                                                            |
+| git log --stat                         | 列出总结性的提交记录                                                                                  |
+| git log --pretty=oneline               | 将每个提交记录在一行显示                                                                              |
+| git log --pretty=oneline --graph       | 可以显示字符图形，表示分支和合并历史                                                                  |
+| git commit --amend                     | 如果你在commit后忘记了某个文件，可以添加后使用此命令提交，这个和上一个提交合并为一个提交              |
+| git reset HEAD filename                | 取消暂存，只会修改暂存区域                                                                            |
+| git reset --head                       | 丢弃本次修改，恢复到最近一次仓库的状态，可能导致所有修改全部丢失                                      |
+| git checkout --file                    | 丢弃该文件的本次修改                                                                                  |
+| git remote [-v]                        | 查看远程仓库/显示对应的URL                                                                            |
+| git remote add shortname url           | 添加一个远程仓库                                                                                      |
+| git fetch remotename                   | 拉取远程仓库有的但是你没有的数据，不会自动合并                                                        |
+| git remote show remotename             | 查看某一个远程仓库的详细信息                                                                          |
+| git remote rename oldname newname      | 重命名一个远程仓库                                                                                    |
+| git remote rm remotename               | 移除一个远程仓库                                                                                      |
+| git tag                                | 查看已有的标签                                                                                        |
+| git tag -a version -m message          | 创建一个有说明的标签；轻量标签不需要 添加-a,-s,-m                                                     |
+| git tag -a version 校验和              | 可以给以前的某次提交打上标签                                                                          |
+| git push remotename tagname            | 将本地指定的标签提交到服务器                                                                          |
+| git push remote --tags                 | 提交所有不在服务器上的标签                                                                            |
+| git checkout -b [branchname] [tagname] | 在特定标签上创建一个新分支                                                                            |
+| git config --global alias.co checkout  | 创建一个checkout命令的别名                                                                            |
+|                                        |                                                                                                       |
