@@ -91,7 +91,7 @@
     git pull                                        #相当于fetch,merge
     
     git fetch remotename(origin)                    #获取远程仓库相应分支的最新提交.从远程仓库下载本地仓库缺失的提交记录,并更新本地远程仓库的指针.只是下载最新的数据,并不会自动合并本地仓库的内容.不带参数,会下载所有提交记录到所对应的分支
-    git fetch origin remote:local                   #将指定远程分支下载到本地分支下
+    git fetch origin remote:local                   #将指定远程分支下载到指定的本地分支下，没有则创建
     git fetch -p                                    #fetch补丁之后删除与远程分支没有对应的本地分支
     
     
