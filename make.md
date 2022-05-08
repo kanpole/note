@@ -44,6 +44,7 @@
 ### GBD调试
 
     ```c
+        file         #加载程序
         list         #查看源码
         display      #查看汇编
         break        #下断点
