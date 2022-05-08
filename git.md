@@ -66,7 +66,7 @@
     git branch -d/-D name                           #删除分支/强制删除分支
     git branch [-l]                                 #查看本地分支
     git branch -r                                   #查看分支
-    git branch -v                                   #查看各分支最后一次的提交id值
+    git branch -v[v]                                #查看各分支最后一次的提交id值 -vv代表查看分支关联的远程分支
     git branch -u origin/locale                     #设置分支跟踪状态
     git branch --merged/--no-merged                 #查看已经合并/未合并到本地的分支
     git branch --set-upstream-to/--track ***master origin/master***                  #设置本地仓库与远程仓库间的映射
