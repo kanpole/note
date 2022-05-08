@@ -27,10 +27,24 @@
         + -shared    #链接时使用动态库
         + -rpath     #指定运行时动态库的查找路径
         + -rpath-link  #指定链接时间接库的查找路径
-        
+        + -m           #编译的程序模式 32or64
     ```
     
-    + link             #链接器，链接目标
+    + ld             #链接器，链接目标
+    
+    ```
+        手动编译一次动态库，假设有一个one.c库
+        gcc -E one.c -o one.i
+        gcc -S -m64 -fpic -shared one.i -o one.s
+        gcc -c -m64 -fpic -shared one.s -o one.o
+        ld  -melf_x86_64 -fpic -shared one.o -o one.so
+    
+    
+    
+    
+    ```
+    
+    
     + ar               #打包静态库
     > ar rcs           #打包库文件
     
