@@ -149,6 +149,9 @@
     git remote set-url ***origin  url***               #设置远程仓库地址,可以修改已存在的
     git remote rename oldname new name                 #重命名远程仓库的简写 
     git remote rm remotename                           #移除一个远程仓库的引用
+    git remote prune origin                            #清理无效的远程分支
+    git remote prune origin --dry-run                  #查看哪些分支需要清理
+
 
     git stash                                      #暂存状态
     git stash apply                                #回复暂存
@@ -187,6 +190,7 @@
     git cherry-pick c4 c2                          #将c4 c2分支顺序取出来复制到当前分支,适用于多分支挑选合并.与rebase差不多,但是rebase不能挑选指定分支.这些分支的父分支.可以当作反撤销使用
     git rebase --interactive/-i                    #交互式rebase,显示一个列表文件,供你挑选要合并的分支
     git commit --amend                             #使用修改之前的提交,和上面配合使用
+
 
 
 
