@@ -62,7 +62,9 @@
     git config --global core.editor          #设置编译器
     git config --global http/https.proxy http/https://127.0.0.1:1081                 #如果挂了梯子git拉取还是太慢可以设置代理,只有http/https生效
     git config --global --unset http/https.proxy                                     #取消设置的项
-
+    git config --global core.autocrlf input                                          #处理换行,提交时转换成LF,检出时不转换
+    
+    
     git branch -M ***main***                        #修改当前分支的名字
     git branch -d/-D name                           #删除分支/强制删除分支
     git branch [-l]                                 #查看本地分支
