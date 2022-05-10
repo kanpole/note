@@ -44,7 +44,7 @@
 
 
     git commit -m "msg"     #提交
-    git commit -a           #git add和git commit合并
+    git commit -am          #git add和git commit合并
     git commit -amend       #可以修改之前的提交
     
     git clone -b master url #克隆指定分支的文件
