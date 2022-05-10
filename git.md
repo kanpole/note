@@ -62,8 +62,9 @@
     git config --global core.editor          #设置编译器
     git config --global http/https.proxy http/https://127.0.0.1:1081                 #如果挂了梯子git拉取还是太慢可以设置代理,只有http/https生效
     git config --global --unset http/https.proxy                                     #取消设置的项
-    git config --global core.autocrlf input                                          #处理换行,提交时转换成LF,检出时不转换
-    
+    git config --global core.autocrlf input/true                                          #处理换行,提交时转换成LF,检出时不转换/提交时转换LF,检出时转换CRLF
+    git config --global core.safecrlf true                                                #禁止提交两种换行
+
     
     git branch -M ***main***                        #修改当前分支的名字
     git branch -d/-D name                           #删除分支/强制删除分支
@@ -198,7 +199,7 @@
 
 
 
-
+    .gitattributes                                  #用于忽略一些文件的转换,比如批处理文件,图像数据文件,应用文件等二进制文件被当成文本被意外转换
     .gitignore                                      #忽略追踪配置文件
     git help command    #显示命令的帮助
     git log                                         #查询提交日志 -p -2可以查询最近两次的详细修改
