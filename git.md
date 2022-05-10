@@ -60,7 +60,8 @@
     git config --global user.name "name"     #设置用户名
     git config --global user.email "email"   #设置email
     git config --global core.editor          #设置编译器
-
+    git config --global http/https.proxy http/https://127.0.0.1:1081                 #如果挂了梯子git拉取还是太慢可以设置代理,只有http/https生效
+    git config --global --unset http/https.proxy                                     #取消设置的项
 
     git branch -M ***main***                        #修改当前分支的名字
     git branch -d/-D name                           #删除分支/强制删除分支
@@ -212,7 +213,27 @@
     ssh -i keyfile root@host                        #ssh登录远程计算机
     
     
+    
+    
     匹配规则:a/**/z                                  #可以匹配a/b/z,a/b/c/z这类目录,
+
+
+```
+
+
+
+## 遇到ssh下载慢问题
+
+在.ssh目录下建立config文件即可
+
+```c
+Host ssh.github.com
+    User git
+    Port 443
+    Hostname ssh.github.com
+    IdentityFile id_rsa
+    TCPKeepAlive yes
+    ProxyCommand D:\BaiduNetdiskWorkspace\ide\other\Git\mingw64\bin -S 127.0.0.1:1080 -a npne %h %p
 
 
 ```
