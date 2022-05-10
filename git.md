@@ -65,6 +65,9 @@
     git config --global core.autocrlf input/true                                          #处理换行,提交时转换成LF,检出时不转换/提交时转换LF,检出时转换CRLF
     git config --global core.safecrlf true                                                #禁止提交两种换行
 
+
+
+
     
     git branch -M ***main***                        #修改当前分支的名字
     git branch -d/-D name                           #删除分支/强制删除分支
