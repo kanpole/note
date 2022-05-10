@@ -58,7 +58,7 @@
 ### GBD调试
 
     ```c
-        file         #加载程序
++        file         #加载程序
         list         #查看源码
         display      #查看汇编
         break        #下断点
@@ -79,3 +79,56 @@
     
     ```
 
+
+## Make规则
+
+  例子
+  ```
+  OBJS = main.o lib.o math.o
+  TARGET = main
+  CC  = gcc
+  AR = ar -crs
+  LD = ld 
+  MAR = -melf-x86-64
+  SHARED = -fpic -shared $(MAR)
+  EFLAGS = -e -o
+  CFLAGS = -c -w $(MAR) -g
+  AFLAGS = -s -m64 -o
+  LFLAGS = -L/usr/lib/ -lstdc
+  
+  $(TARGET):$(OBJS)
+    $(CC) $(CFLAGS) $(OBJS)  -o $(TAGGET)
+  
+  one.o:one.c two.c \                  #可以使用\进行换行
+        three.c
+      gcc one.c two.c -o one.o
+      
+  three.o:three.h
+  one.o:one.h three.o                  #隐含规则可以省略
+
+  clean:                               #没有任何依赖的规则永远不会被自动执行
+      rm *.o
+  .PHONY:clean1
+  clean1:
+      -rm *.exe                           #-表示忽略执行错误
+  ::always:                               #双冒号规则总是会被无条件执行
+    echo "ex" 
+  [-/]include *.mk foo other              #包含其他make,-/s表示找不到包含的文件不会报错终止
+  环境变量MAKEFILES                         #此环境变量会在make执行时,优先读取,并且不会报错也不会作为终极目标
+  MAKEFILE_LIST                           #这个变量存储了makefile链表,最后一个表示当前的mk文件
+  %:force                                 #模式规则
+  force:;
+  
+  #定义变量方式,有延后和立即展开
+  =
+  :=
+  ?=
+  +=
+  define name
+    defdata
+  endef
+  
+  #条件语句
+  ifdef  ifeq  ifndef  ifneq
+  
+  ```
