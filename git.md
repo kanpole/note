@@ -226,14 +226,13 @@
 
 在.ssh目录下建立config文件即可
 
-```c
-Host ssh.github.com
-    User git
-    Port 443
-    Hostname ssh.github.com
-    IdentityFile id_rsa
-    TCPKeepAlive yes
-    ProxyCommand D:\BaiduNetdiskWorkspace\ide\other\Git\mingw64\bin -S 127.0.0.1:1080 -a npne %h %p
 
+Host ssh.github.com
+  User git
+  Port 443
+  Hostname ssh.github.com
+  IdentityFile "D:\ide\home\.ssh\id_rsa"
+  TCPKeepAlive yes
+  ProxyCommand "D:\ide\other\Git\mingw64\bin\connect.exe" -S 127.0.0.1:1080 -a none %h %p
 
 ```
