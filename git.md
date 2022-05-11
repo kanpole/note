@@ -45,7 +45,7 @@
 
     git commit -m "msg"     #提交
     git commit -am          #git add和git commit合并
-    git commit -amend       #可以修改之前的内容,不会产生新提交
+    git commit -amend       #可以修改之前提交时输入的信息参数,会产生一个新提交,来替换老的提交记录
     
     git clone -b master url #克隆指定分支的文件
     git clone url           #克隆主分支的文件
@@ -60,7 +60,7 @@
     git config --global user.name "name"     #设置用户名
     git config --global user.email "email"   #设置email
     git config --global core.editor          #设置编译器
-    git config --global http/https.proxy http/https://127.0.0.1:1081                 #如果挂了梯子git拉取还是太慢可以设置代理,只有http/https生效
+    git config --global http/https.proxy 127.0.0.1:1081                 #如果挂了梯子git拉取还是太慢可以设置代理,只有http/https生效
     git config --global --unset http/https.proxy                                     #取消设置的项
     git config --global core.autocrlf input/true                                          #处理换行,提交时转换成LF,检出时不转换/提交时转换LF,检出时转换CRLF
     git config --global core.safecrlf true                                                #禁止提交两种换行
@@ -83,10 +83,9 @@
     git describe ***ref**                                                            #查询指定分支的描述,<tag><num><ref>,为tag,间隔了几次提交,当前的commit hash
 
     git push -u origin master                                                        #将当前分支上传至服务器,没有则创建.
-    git push origin main                                                             #将指定本地分支推送到服务器上
+    git push origin main                                                             #将本地分支推送到服务器的指定分支上
     git push origin local^:origin                                                     #将指定本地分支推送到服务器上,^可选,表示当前分支的上一次提交
     git push -u ***localbranch-name***  ***origin  branch-name***    [-f]            #将指定分支上传到服务器的对应分支 加上-f选项可以强制上传,忽略冲突
-    git push -u origin master                          #将本地分支推送到远程分支,如果远程分支 不存在则创建
     git push ***origin :remote-branch***               #推送一个空分支到远程仓库,相当于删除远程分支
     git push origin --delete branch                    #删除远程分支
     git push origin --delete tag tagname               #删除远程tag 
@@ -97,22 +96,19 @@
     git pull --rebase origin master                 #相当于fetch,rebase
     git pull                                        #相当于fetch,merge
     
-    git fetch remotename(origin)                    #获取远程仓库相应分支的最新提交.从远程仓库下载本地仓库缺失的提交记录,并更新本地远程仓库的指针.只是下载最新的数据,并不会自动合并本地仓库的内容.不带参数,会下载所有提交记录到所对应的分支
+    git fetch remote-branchname(origin)                    #获取远程仓库相应分支的最新提交.从远程仓库下载本地仓库缺失的提交记录,并更新本地远程仓库的指针.只是下载最新的数据,并不会自动合并本地仓库的内容.不带参数,会下载所有提交记录到所对应的分支
     git fetch origin remote:local                   #将指定远程分支下载到指定的本地分支下，没有则创建
     git fetch -p                                    #fetch补丁之后删除与远程分支没有对应的本地分支
     
     
-    
-    > 向前提交
-    
     git merge ***origin/master***                  #将远程分支合并到当前分支,这种合并是逻辑合并,只是指向合并的父节点
     git merge ***branch***                         #将指定分支合并到当前分支
-    git merge ***origin/master*** --no-ff          #不要Fast-Foward合并,可以生成merge提交记录
+    git merge ***origin/master*** --no-ff          #不要Fast-Foward合并,可以生成merge提交记录,自己修改一些提交信息
     
     git rebase ***branch***                        #以指定分支为基复制当前的分支链在构建在其下面,合并后只留下一个父指向.此合并是复制合并,相当于每次子提交都像是在本分支发生的. 并且当前分支向前移动.
-    git rebase ***master*** ***branch***           #以前者为基复制添加后者的记录,rebase会使当前分支向前移动,也就是比原分支领先一个分支.原分支不应该再使用了,或者原分支也rebase一下
+    git rebase ***branch*** ***branch***           #以前者为基复制添加后者的记录,rebase会使当前分支向前移动,也就是比原分支领先一个分支.原分支不应该再使用了,或者原分支也rebase一下
     
-    > 向后提交
+
     
     git reset HEAD~2            #回滚到上两个版本.就像是改写历史一样,并且不会生成提交记录,那些被撤销的分支就行重来没有提交过,回滚后那些版本所做的修改还在,但是未加入暂存.对于多人协作的分支,请时使用revert
     git reset file              #回滚指定文件
@@ -138,8 +134,7 @@
     git checkout -b ***local***   ***origin/branch***  #根据远程分支创建本地分支
     git checkout $id                               #把某次历史提交checkout出来查看,不会创建分支,切换到其他分支会自动删除
     git checkout $id -b newname                    #把某次历史提交checkout出来查看,并创建一个分支保存
-    git checkout -- file                           #重新从仓库拉出文件,并覆盖当前工作区的文件
-    git checkout --track ***origin/branch***       #跟踪某个远程分支,并创建响应的本地分支
+    git checkout --track ***origin/branch***       #将分支检索出来并设置HEAD跟踪
     git switch ***branch***                        #仅仅切换分支
     
 ```
@@ -173,7 +168,7 @@
     git checkout main^/main~                       #直接使用hash值来切换到某次提交不方便,所以可以使用相对定位,^main表示main分支的上一次提交,同理^^表示上两次的那次提交.如果有多个父记录,默认第一个
     git checkout main^2                            #当有多个父记录时,这条命令选择第二个父记录
     git checkout main~3                            #表示多次之前的
-    git checkout HEAD~^3~6                         #链式操作
+    git checkout HEAD^~3~6                         #链式操作
     git checkout HEAD^/HEAD~4                      #也可以以当前HEAD作为参照物进行移动
     git branch -f main HEAD~3                      #强制main分支指向相对于HEAD的上三级分支,原main位置新提交的分支处于游离状态
 
