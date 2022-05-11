@@ -45,7 +45,11 @@
 
     git commit -m "msg"     #提交
     git commit -am          #git add和git commit合并
+<<<<<<< HEAD
     git commit -amend       #可以修改之前提交时输入的信息参数,会产生一个新提交,来替换老的提交记录
+=======
+    git commit -amend       #可以修改之前的提交
+>>>>>>> 391a501f5b4ee56fc44aed41bd63d46d25aee733
     
     git clone -b master url #克隆指定分支的文件
     git clone url           #克隆主分支的文件
