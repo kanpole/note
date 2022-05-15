@@ -82,76 +82,78 @@
 
 ## Make¹æÔò
 
-  Àý×Ó
+
   ```
-  OBJS = main.o lib.o math.o
-  TARGET = main
-  CC  = gcc
-  AR = ar -rcs
-  LD = ld 
-
-  SHARED = -fpic -shared $(MAR)
-
-  CFLAGS := -c -w $(MAR) -g
-
-  LFLAGS = -L/usr/lib/ -lstdc
-  
-  $(TARGET):$(OBJS);ls -a
-    $(CC) $(CFLAGS) $(OBJS)  -o $(TAGGET) \
-    ls -a
-  
-  one.o:one.h three.o                     #Òþº¬¹æÔò¿ÉÒÔÊ¡ÂÔ±àÒëÃüÁî
-
-  .PHONY:clean
-   clean:                                 #Ã»ÓÐÈÎºÎÒÀÀµµÄ¹æÔòÓÀÔ¶²»»á±»×Ô¶¯Ö´ÐÐ, ²¢ÇÒ×Ü»á±»ÈÏÎªÊÇ×îÐÂµÄ
-      -rm *.o                             #-±íÊ¾ºöÂÔÖ´ÐÐ´íÎó£¬@±íÊ¾½ûÓÃ»ØÏÔ
-      
-  main.o::main.c                         #Ä¿±ê¿ÉÒÔÓÐ¶à¸öÖØ½¨¹æÔò£¬µ«ÊÇ±ØÐëÊÇÍ¬Ò»ÖÖÃ°ºÅ¸ñÊ½£¬Ë«Ã°ºÅµÄ´¦ÀíÓëµ¥Ã°ºÅ²»Í¬£¬ÄÄ¸ö¹æÔòµÄÒÀÀµ¸üÐÂ¾ÍÖ»Ö´ÐÐÄÄ¸ö¹æÔòµÄÒÀÀµ
-      command 
-    
-  main.o::main.h
-      command
-    
-
-
 
   #makeÖÐ¹æÔòµÄÃüÁîÈç¹ûÊôÓÚÍ¬Ò»ÐÐ£¬ÄÇËüÃÇ¾Í»áÔÚÍ¬Ò»¸öshellÖÐÖ´ÐÐ£¬·ñÔò¾ÍÊÇÏà»¥¶ÀÁ¢µÄ£¬ËùÒÔ×îºóÊ¹ÓÃ£»ºÍ\À´·Ö¸îÒÔ¼°±íÊ¾»»ÐÐ
+  #-l±íÊ¾ÒÀÀµ¿â,¹æÔòºÍgccÏàÍ¬,|Ö®ºóµÄÒÀÀµ¸üÐÂ²»»áµ¼ÖÂ¹æÔòÖØ½¨
+  $(TARGET):$(OBJS) -lstdc| head.h;ls -a \
+    @$(CC) -c $(CFLAGS) $(OBJS)  -o $(TAGGET); $(LD) (LDFLAGS) $@ -lstdc \
+    -ls -a \
+    +rm *.o
     
+  #Òþº¬¹æÔò¿ÉÒÔÊ¡ÂÔ±àÒëÃüÁî
+  one.o:one.h 
+
+  main.o::main.c                         #×îÖÕ¹æÔò,ËµÃ÷Ä¿±ê²»ÊÇÖÐ¼äÎÄ¼þ²úÉúµÄ,²»Òª²éÕÒÒþº¬¹æÔò,È¥Éú³ÉÖÐ¼äÎÄ¼þÀ´¹¹½¨Ä¿±ê,¿ÉÒÔÓÐ¶à¸öÖØ½¨Ä¿±êµÄ×îÖÕ,ÄÄ¸ö¹æÔòµÄÒÀÀµ¸üÐÂ¾ÍÖ»Ö´ÐÐÄÄ¸ö¹æÔòµÄÒÀÀµ.µ¥Ã°ºÅ»á½«ËùÓÐÄ¿±ê¹æÔòºÏ²¢µ½Ò»ÆðÖ´ÐÐ
+      command 
+
   [-]include *.mk foo other              #°üº¬ÆäËûmake,-±íÊ¾ÕÒ²»µ½°üº¬µÄÎÄ¼þ²»»á±¨´íÖÕÖ¹
   
   sources = main.c one.c
-  sinclude $(sources:.c=.mk)             #sinclude±íÊ¾°üº¬¶à¸öÎÄ¼þ
-  
-  »·¾³±äÁ¿MAKEFILES                         #´Ë»·¾³±äÁ¿»áÔÚmakeÖ´ÐÐÊ±,ÓÅÏÈ¶ÁÈ¡,²¢ÇÒ²»»á±¨´íÒ²²»»á×÷ÎªÖÕ¼«Ä¿±ê
-  MAKEFILE_LIST                           #Õâ¸ö±äÁ¿´æ´¢ÁËmakefileÁ´±í,×îºóÒ»¸ö±íÊ¾µ±Ç°µÄmkÎÄ¼þ
-  %:force                                 #Ä£Ê½¹æÔò£¬±íÊ¾ËùÓÐÄ¿±ê£¬ÓÅÏÈ¼¶×îµÍ
+  sinclude $(sources:.c=.mk)             #sinclude±íÊ¾°üº¬¶à¸öÎÄ¼þ ÊÇgnuµÄÀ©Õ¹
 
+
+  »·¾³±äÁ¿
+  MAKEFILES                               #´Ë»·¾³±äÁ¿»áÔÚmakeÖ´ÐÐÊ±,ÓÅÏÈ¶ÁÈ¡,²¢ÇÒ²»»á±¨´íÒ²²»»á×÷ÎªÖÕ¼«Ä¿±ê
+  MAKEFILE_LIST                           #Õâ¸ö±äÁ¿´æ´¢ÁËmakefileÁ´±í,×îºóÒ»¸ö±íÊ¾µ±Ç°µÄmkÎÄ¼þ
+  
+  %::force;                               #Ä£Ê½¹æÔò£¬±íÊ¾ËùÓÐÄ¿±ê£¬ÓÅÏÈ¼¶×îµÍ
+   
+  È±Ê¡¹æÔò,Ä¿±êÓëËùÓÐÏÖÓÐ¹æÔò¶¼²»Æ¥ÅäµÄÊ±ºò¾ÍÖ´ÐÐ´Ë¹æÔò
+  %::
+    command
+    
+  È±Ê¡¹æÔò 
+  .DEFAULT:
+    command
+  
+  
+  ºó×º¹æÔò,ºó×º¹æÔò²»ÄÜÓÐÒÀÀµ,·ñÔò¾ÍÊÇÆÕÍ¨¹æÔò,Ò²¿ÉÒÔÊ¹ÓÃ.SUFFIXESÀ´ÊµÏÖ,±äÁ¿SUFFIXE´æ´¢ÁË¿ÉÊ¶±ðµÄºó×ºÁÐ±í,±íÊ¾Ö»¸ø³öÄ¿±ê.oÊ±,´Ë¹æÔòÀûÓÃ.cÎÄ¼þÀ´Ö´ÐÐÃüÁîÖØ½¨.o
+  .c.o:
+    command
+  
+  
+
+¾²Ì¬¿â¹æÔò,ÕâÖÖ¹æÔò,Ö»ÄÜÊ¹ÓÃarÕâÖÖ²Ù×÷¿âµÄÃüÁî,Òþº¬¹æÔòÊ¹ÓÃarÀ´¹¹½¨
+stdclib(one.o two.o):one.o two.o
+    command
+
+stdclib:stdclib(one.o) stdclib(two.o) #±íÊ¾µ±one.o two.o¸üÐÂÊ±,ÖØÐÂ¹¹½¨´Ë¿â
+    command
   
   
   cd subdir && $(MAKE)                                 #±íÊ¾make³ÌÐò
   $(MAKE) -C subdir                                    #-C±íÊ¾½øÈësubdirÄ¿Â¼²¢Ö´ÐÐmake,µ±$(MAKE)×÷Îª¹æÔòÃüÁî£¬²¢ÇÒÖ÷make´øÓÐ-n -t -qµÄÊ±ºò£¬Ëü»¹ÊÇ»áÖ´ÐÐ
   
-  ±äÁ¿CURIDR                                            #»á±»×Ô¶¯¸³Öµ£¬±íÊ¾µ±Ç°½øÈëµÄÄ¿Â¼
+  ±äÁ¿
+  CURIDR                                               #»á±»×Ô¶¯¸³Öµ£¬±íÊ¾µ±Ç°½øÈëµÄÄ¿Â¼
   MAKEFLAGS                                            #±íÊ¾´«¸ømakeµÄ²ÎÊý
   MAKELEVEL                                            #´ú±íÁËmakeÇ¶Ì×µÄÉî¶È
   .EXPORT_ALL_VARIABLES                                #±íÊ¾µ¼³öËùÓÐ±äÁ¿µ½×ÓÀý³Ì
+  export                                               #µ¼³öËùÓÐ±äÁ¿µ½×ÓÀý³Ì
   export variables = value
   unexport variables
-  export                                               #µ¼³öËùÓÐ±äÁ¿µ½×ÓÀý³Ì
+
   
   
   
   #¶¨Òå±äÁ¿·½Ê½,ÓÐÑÓºóºÍÁ¢¼´Õ¹¿ª
-  =   #Ê¹ÓÃÊ±Õ¹¿ª
-  :=  #¶¨ÒåÊ±Õ¹¿ª
+  =   #Ê¹ÓÃÊ±Õ¹¿ª,×ÖÃæ¸³Öµ
+  :=  #¶¨ÒåÊ±Õ¹¿ª,Âß¼­¸³Öµ
   ?=  #Ã»ÓÐ¶¨Òå¾ÍÓÃ=¶¨Òå,·ñÔò²»¸Ä±äÖµ
   +=  #Ìí¼Ó,Ã»ÓÐ¾ÍÓÃ=¶¨Òå,ÓÐÖ±½ÓÌí¼Ó
   
-
-  
-  #Ìõ¼þÓï¾ä
-  
-  main.exe:main.c -lstdcpp| main.h ; gcc main.c                    #-l±íÊ¾ÒÀÀµ¿â,¹æÔòºÍgccÏàÍ¬,|Ö®ºóµÄÒÀÀµ¸üÐÂ²»»áµ¼ÖÂ¹æÔòÖØ½¨
   
   VPATH = src : ../include                               #´Óµ±Ç°Ä¿Â¼¿ªÊ¼,Ê¹ÓÃÕâÐ©Ä¿Â¼×÷ÎªËÑË÷Ä¿±êºÍÒÀÀµµÄÎ»ÖÃ
   vpath %.h ../heards                                    #ÎªÄ³ÖÖÎÄ¼þ»òÕßÄ£Ê½µ¥¶ÀÉèÖÃÄ¿Â¼
@@ -161,23 +163,26 @@
   GPATH = src : ../execute                          #µ±ÐèÒªÖØ½¨,µ«Ä¿±ê²»´æÔÚÊ±,½«»áÔÚ¹¤×÷Ä¿Â¼ÏÂ¹¹½¨Ä¿±ê,·ñÔò¾ÍÔÚÄ¿±êËùÔÚµÄÄ¿Â¼ÏÂÖØ½¨,ºÍVPATHÓÐËù²»Í¬
   .LIBPATTERNS =lib%.so lib%.dll                    #Õâ¸ö±äÁ¿¿ØÖÆÁË,ÔÚÒÀÀµÖÐ°üº¬-lstdc++ÕâÖÖ¿âÊ±,ÈçºÎ½âÎö
   
-  .DELETE_ON_ERROR£º%.o %.exe                       #ÓÐÒ»¶ÑÕâÖÖÌØÊâÄ¿±ê
+  .DELETE_ON_ERROR£º%.o %.exe                        #·¢Éú´íÎóÊ±,É¾³ý¹¹½¨µÄÄ¿±ê,ÓÐÒ»¶ÑÕâÖÖÌØÊâÄ¿±ê
   
-  one.out two.out files.out:head.h                         #¶àÄ¿±ê
+  one.out two.out files.out:head.h                  #¶àÄ¿±ê
       @echo head.h $(subst out,,$@) >$@ 
   
+#¾²Ì¬¹æÔò,Ä¿±êÊÇ·ÇÄ£Ê½Æ¥ÅäµÄ
+OBJS = main.o two.o one.h 
 
-
-
-OBJS = main.o two.o one.h                           #¾²Ì¬¹æÔò,Ä£Ê½Ìæ»»¹æÔò,¶¯Ì¬Ìæ»»¹æÔò
-
-    $(filter %.o,$(OBJS)):%.o:%.c
+    $(OBJS) :%.o:%.c                               #¿ÉÒÔ¿´³ÉÊÇÒ»¸öÄ¿±êÒÀÀµÓÚÒ»¸öÄ£Ê½¹æÔò
         gcc $< -o $@
 
 
     aout bout:%out,%.c
         gcc $< -o $@
         echo $*                                     #echo a b
+
+
+ÐèÒªÃ÷È·µÄÊÇ,ÔÚÄ£Ê½¹æÔòÖÐ,ÀýÈçÄ£Ê½e%t:%,Èç¹ûÄ¿±êÊÇsrc/eat,ÄÇÃ´ÒÀÀµÊÇsrc/a,ÔÚ½øÐÐÄ£Ê½Ìæ»»Ê±,»áÏÈÈ¥µô
+Ä¿±ê²¿·Ö,µÈÆ¥ÅäÍê³ÉºóÔÙ¼ÓÉÏÄ¿Â¼.ÔÚÄ£Ê½¹æÔòÖÐÄ¿±ê´øÄ¿Â¼µÄÊ±ºò
+    %.c:%.o ;command                                #Ä£Ê½¹æÔò,Ä¿±êÊÇÄ£Ê½Æ¥ÅäµÄ
         
 
 ```
@@ -192,27 +197,15 @@ OBJS = main.o two.o one.h                           #¾²Ì¬¹æÔò,Ä£Ê½Ìæ»»¹æÔò,¶¯Ì¬Ì
 
     $a                                #µ¥×Ö±äÁ¿¿ÉÒÔ²»´øÀ¨ºÅ
     $abc = $(a)bc
-    
-    a=$(b)                            #½«a¸³Öµ¸øÆäËû±äÁ¿Ê±aµÄÄÚÈÝÊÇ$(b),ÕâÖÖ¸³Öµ¿ÉÒÔÒýÓÃºóÃæµÄ±äÁ¿
-    b=c 
 
-
-    
-    a:=c
-    b:=$(a)                           #¶¨Òå±äÁ¿Ê±£¬b=c£¬¶¨ÒåµÄÊ±ºò¶Ô±äÁ¿½âÒýÓÃ£¬²»ÄÜÒýÓÃºóÃæÎ´¶¨ÒåµÄ±äÁ¿,·ñÔò¾ÍÊÇ¿Õ
-    
-    a?=b                              #±äÁ¿aÃ»ÓÐÖµµÄÊ±ºò²Å»á±»¸³Öµ
-    
-    
     a:a.c b.c
     d=$(a:.c=.o)                      #d= a.o b.o¿ìËÙÌæ»»£¬Ïàµ±ÓÚº¯Êýpatsubst
  or d=$(a:%.c=%.o)
  
  
-    a+=b                              #Èç¹ûÖ®Ç°aÃ»ÓÐ¶¨Òå¾ÍÓÃ=À´¶¨Òå
-    
-    a:=b.c
-    a+=d.c                            #Ïàµ±ÓÚa:= b.c d.c,Á¢¼´Õ¹¿ª
+
+    a =b.c
+    a+=d.c                            #a±¾ÉíÁ¢¼´Õ¾¿´,µ«ÊÇaÀïÃæµÄÒýÓÃ±äÁ¿²»»áÕ¹¿ª
  
     overried CFLAGS += -g             #¿ÉÒÔ·ÀÖ¹±äÁ¿±»ÃüÁîÐÐÐÞ¸Ä
 
@@ -240,6 +233,59 @@ OBJS = main.o two.o one.h                           #¾²Ì¬¹æÔò,Ä£Ê½Ìæ»»¹æÔò,¶¯Ì¬Ì
     
 
 ```
+
+
+### make ±äÁ¿
+
+```
+´Ë±äÁ¿¼ÇÂ¼ÁËÃüÁîÐÐ´«¸ømakeµÄÖÕ¼«Ä¿±êÁÐ±í
+MAKECMDGOALS 
+
+Òþº¬¹æÔò»áÊ¹ÓÃÒ»Ð©ÁÐÕâÖÖ±äÁ¿,À´¿ØÖÆÒþº¬¹æÔòµÄ±àÒë³É¹¦,ÈçLINK.o,COMPILE.cµÈÕâÐ©±íÊ¾Òþº¬¹æÔòµÄ±äÁ¿Àï´æÁË±àÒëÄ¿±êµÄÃüÁî
+OUTPUT_OPTION ;¿ÉÒÔÖ¸¶¨Ò»¸öÒÆ¶¯ÃüÁîÈç;mv $*.o $@
+
+
+---------------
+×Ô¶¯»¯±äÁ¿
+
+
+¹æÔòÖÐÄ¿±êµÄÎÄ¼þÃû
+$@
+
+Èç¹ûÄ¿±êÊÇÒ»¸ö¾²Ì¬¿âÎÄ¼þ,Ëü´ú±íÒ»¸ö³ÉÔ±Ãû,·ñÔòÎª¿Õ
+$%
+
+¹æÔòÒÀÀµµÄµÚÒ»¸ö
+$<
+
+ËùÓÐ±ÈÄ¿±êÐÂµÄÒÀÀµÎÄ¼þÁÐ±í,Èç¹ûÄ¿±êÊÇ¾²Ì¬¿âÎÄ¼þÃû,Ôò´ú±í¿â³ÉÔ±(.o)µÄ¸üÐÂÇé¿ö
+$?
+
+¹æÔòµÄËùÓÐÒÀÀµÁÐ±í,»áÈ¥µôÖØ¸´ÒÀÀµ,µ±Ä¿±êÊÇ¾²Ì¬¿âÎÄ¼þÃûÊ±,´ú±íËùÓÐ¿â³ÉÔ±Ãû
+$^
+
+ºÍ$^ÏàÍ¬,µ«ÊÇ±£ÁôÖØ¸´
+$+
+
+ÔÚÄ£Ê½¹æÔòÖÐ´ú±í¾¥,Ò²¾ÍÊÇÄ£Ê½¹æÔòÖÐ%Æ¥ÅäµÄÄ¿±êµÄ²¿·Ö,ÔÚ·ÇÄ£Ê½¹æÔòÖÐ,´ú±íºóê¡Ö®Ç°µÄ²¿·Ö,Èç¹ûÊÇÎ´Ê¶±ðµÄºóê¡,ÔòÎª¿Õ
+$*
+
+
+±äÖÖ×Ô¶¯±äÁ¿(×Ô¶¯±äÁ¿Ç°Ãæ¼ÓÉÏD,F),Ïàµ±ÓÚº¯Êýdir,notdir
+$(@D) #Ä¿±êµÄÄ¿±êÃû
+$(@F) #Ä¿±êµÄÎÄ¼þÃû,²»°üº¬Ä¿Â¼
+
+
+
+
+ÌØÊâ±äÁ¿
+Ò»°ãÊÇ²»ÄÜÔÚ¹æÔòÖÐÊ¹ÓÃ×Ô¶¯±äÁ¿µÄ,µ«ÊÇ¿ÉÒÔÊ¹ÓÃÕâÖÖ·½Ê½À´Ê¹ÓÃ
+/usr/include/stdio.c:$$@ $$(@D) $$(@F)
+
+
+```
+
+
 
 ### ÄÚÇ¶º¯Êý
 
@@ -269,19 +315,18 @@ $(filter-out %.c %.o..   , text)
 $(sort text)
 
 
-È¡µ¥´Êº¯Êý,È¡textµÄµÚn¸öÏî,´Ó1¿ªÊ¼
-$(word n,text)
-
-·¶Î§È¡µ¥´Êº¯Êý,È¡´Ós,µ½eµÄÏî
-$(word s,e,text)
-
-¼ÆËãtextÖÐµ¥´ÊµÄÊýÄ¿
-$(words text)
-
 
 ·µ»ØtextµÄµÚÒ»¸öµ¥´Ê
 $(firstword text)
 
+È¡µ¥´Êº¯Êý,È¡textµÄµÚn¸öÏî,´Ó1¿ªÊ¼
+$(word n,text)
+
+·¶Î§È¡µ¥´Êº¯Êý,È¡´Ós,µ½eµÄÏî
+$(wordlist s,e,text)
+
+¼ÆËãtextÖÐµ¥´ÊµÄÊýÄ¿
+$(words text)
 
 ·µ»ØtextÖÐ¸÷ÏîµÄÄ¿Â¼²¿·Ö,Èç¹ûÃ»ÓÐÄ¬ÈÏÎª./ .·µ»ØµÄ½á¹ûÖÐ°üº¬×îºóµÄ/
 $(dir text)
@@ -320,7 +365,7 @@ $(if $(GCC) ,$(GCC),$(G++))
 µ÷ÓÃ×Ô¼º¶¨ÒåµÄº¯Êý±äÁ¿
 $(call variable,param,param,...)
 link = $(addsuffix $(1),$(2))
-result :=$(link one,.c) 
+result :=$(call link ,one,.c) 
 result := one.c
 
 »ñÈ¡±äÁ¿µÄ×ÖÃæÖµ,Ò²¾ÍÊÇ²»Õ¹¿ªÊ±µÄÖµ,µ«ÊÇ¶ÔÓë:=ÕâÖÐÁ¢¼´Õ¹¿ªµÄ»á·µ»ØÆäÁ¢¼´Õ¹¿ªºóµÄÖµ
@@ -350,13 +395,32 @@ $(warning text)
 ### Ñ¡Ïî
 
 ```c
-    -w #ÇÐ»»Ä¿Â¼Ê±£¬´òÓ¡½øÈëµÄÄ¿Â¼
-    -s #½ûÖ¹´òÓ¡ÃüÁî±¾Éí
-    -C #½øÈëÒ»¸öÄ¿Â¼²¢Ö´ÐÐ
-    -i #Óöµ½ÃüÁî´íÎó²»ÍË³ö
-    --keep-going #-Óöµ½¹æÔò´íÎó²»ÍË³ö
+
+    -b/-m #Ìá¹©ºÍÆäËûmakeµÄ¼æÈÝÐÔ
+    -B #Ç¿ÖÆÖØ½¨ËùÓÐ¹æÔòµÄÄ¿±êÎÄ¼þ
+    -C #½øÈëÄ¿Â¼²¢Ö´ÐÐ
+    -d #´òÓ¡µ÷ÊÔÐÅÏ¢
     -e #±íÊ¾Ê¹ÓÃ»·¾³±äÁ¿µÄÖµ£¬ÎÄ¼þÄÚ»òÕßÃüÁîÐÐ±äÁ¿²»»áÌæ»»»·¾³±äÁ¿
-        -t #¸üÐÂÎÄ¼þµÄÊ±¼ä´Á£¬²»Ö´ÐÐÃüÁî£¬µ«ÊÇÈç¹ûÄ¿±ê¹æÔòÃüÁîÖÐ´ø+ºÅ»¹ÊÇ»áÖ´ÐÐ
+    -f Ö¸¶¨ÎÄ¼þ,¿ÉÒÔÍ¬Ê±Ö¸¶¨¶à¸ö
+
+    -i #ºöÂÔ´íÎó
+    -I #Ö¸¶¨makefileµÄËÑË÷Ä¿Â¼
+    -j #Ö¸¶¨Í¬Ê±ÔËÐÐµÄjobÊý
+    -k #ºöÂÔÖÕ¼«Ä¿±êÖ®Ç°µÄ´íÎó
+
+    -n #Ö»´òÓ¡ÒªÖ´ÐÐµÄÃüÁî,²»Ö´ÐÐ
+    -o #Ö¸¶¨ÎÄ¼þ²»ÐèÒªÖØ½¨
+    -p #¿ÉÒÔ²é¿´makeÖ´ÐÐÇ°¶ÁÈ¡µÄÐÅÏ¢,Èçmake -p -f ./null
+    -q #²»ÔËÐÐÃüÁî,Ö»²éÊÇ·ñÓÐÄ¿±êÐèÒª±»ÖØ½¨,·µ»Ø0²»ÐèÒªÖØ½¨,1ÓÐÄ¿±êÐèÒªÖØ½¨,2´íÎó
+    -r #È¡ÏûËùÓÐÓÐÒþº¬¹æÔò
+    -R #È¡ÏûËùÓÐÒþº¬±äÁ¿
+    -s #È¡ÏûÃüÁî»ØÏÔ
+    -S #È¡Ïû-kÑ¡Ïî,Ò²¾ÍÊÇÓöµ½´íÎó»áÍË³ö,ÓÃÔÚµÝ¹émakeÖÐ
+    -t #Ö»¸üÐÂÄ¿±êÎÄ¼þµÄÊ±¼ä´Á
+    -w #ÇÐ»»Ä¿Â¼Ê±£¬´òÓ¡½øÈëµÄÄ¿Â¼
+    -W #¼Ù¶¨Ä¿±êÊÇ×îÐÂµÄ,Ö´ÐÐ¸üÐÂÃüÁî,¿ÉÒÔºÍnÅäºÏÊ¹ÓÃ²é¿´ÒÀÀµÓë´ËÎÄ¼þµÄÄ¿±ê
+
+
 ```
 
 
@@ -365,22 +429,16 @@ $(warning text)
 
 ```
 
-    define name
-        echo "$@"
-        echo "$<" 
-    endef
-
-main.c:main.o
-    @$(name)                   #¼ÓÉÏ@±íÊ¾Õâ¸ö°üÄÚµÄËùÓÐÃüÁî¶¼½ûÖ¹»ØÏÔ
-
------------------------
     target:;                   #¿ÕÄ¿±ê£¬×ÜÊÇ±»ÈÏÎªÊÇ×îÐÂµÄ£¬ÒÔËüÎªÒÀÀµµÄÄ¿±ê×ÜÊÇ»á±»Ö´ÐÐ
 
     .PHONY                     #ÌØÊâÄ¿±ê£¬¿ÉÒÔÊµÏÖÒ»Ð©¹¦ÄÜ£¬ÓÃÀ´¼æÈÝÀÏÊ½make³ÌÐò
 
     
 
+µ±Ò»¸ö¹æÔòÓÐÄ¿±êºÍÒÀÀµ,Ã»ÓÐÃüÁîÊ±,»áÊ¹ÓÃ¶ÔÓ¦µÄÒþº¬¹æÔò
+µ±Ò»¸öÎÄ¼þ±»µ±×÷ÒÀÀµ,µ«ÊÇÃ»ÓÐÖØ½¨´ËÎÄ¼þµÄÄ¿±êÊ±,»áÊ¹ÓÃÒþº¬¹æÔòÖØ½¨
 
+Ä¿±êºÍÒÀÀµÖÐ²»ÄÜÊ¹ÓÃ×Ô¶¯±äÁ¿,µ«ÊÇ¿ÉÒÔÊ¹ÓÃÄ£Ê½,ºÍ$$@ $$(@D)ÕâÀàÌØÊâ×Ô¶¯±äÁ¿
 
 ```
 
