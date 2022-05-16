@@ -161,7 +161,7 @@ stdclib:stdclib(one.o) stdclib(two.o) #表示当one.o two.o更新时,重新构建此库
   vpath                                                  #清除所有目录搜索规则
   
   GPATH = src : ../execute                          #当需要重建,但目标不存在时,将会在工作目录下构建目标,否则就在目标所在的目录下重建,和VPATH有所不同
-  .LIBPATTERNS =lib%.so lib%.dll                    #这个变量控制了,在依赖中包含-lstdc++这种库时,如何解析
+  .LIBPATTERNS =% lib%.so                    #这个变量控制了,在依赖中包含-lstdc++这种库时,如何解析
   
   .DELETE_ON_ERROR：%.o %.exe                        #发生错误时,删除构建的目标,有一堆这种特殊目标
   
@@ -174,10 +174,6 @@ OBJS = main.o two.o one.h
     $(OBJS) :%.o:%.c                               #可以看成是一个目标依赖于一个模式规则
         gcc $< -o $@
 
-
-    aout bout:%out,%.c
-        gcc $< -o $@
-        echo $*                                     #echo a b
 
 
 需要明确的是,在模式规则中,例如模式e%t:%,如果目标是src/eat,那么依赖是src/a,在进行模式替换时,会先去掉
@@ -205,7 +201,7 @@ OBJS = main.o two.o one.h
  
 
     a =b.c
-    a+=d.c                            #a本身立即站看,但是a里面的引用变量不会展开
+    a+=d.c                            #a本身立即展开,但是a里面的引用变量不会展开
  
     overried CFLAGS += -g             #可以防止变量被命令行修改
 
@@ -220,7 +216,7 @@ OBJS = main.o two.o one.h
     %.o:CFLAGS = -g -w                  #目标指定变量,模式指定变量,可以和其他变量同时存在，对它的修改不会影响全局，重建目标时优先使用
     
     
-    ifeq ifneq ifdef ifndef else end    #条件测试语句
+    ifeq ifneq ifdef ifndef else endif    #条件测试语句
     ifeq($(CC),gcc)
        content
     else ifdef G++
@@ -435,8 +431,8 @@ $(warning text)
 
     
 
-当一个规则有目标和依赖,没有命令时,会使用对应的隐含规则
-当一个文件被当作依赖,但是没有重建此文件的目标时,会使用隐含规则重建
+当一个规则有目标和依赖,没有命令时,会使用对应的隐含规则,重建此目标
+当一个目标没有依赖,,会使用隐含规则重建依赖,如果此目标没有命令,也会使用隐含规则的命令重建此目标
 
 目标和依赖中不能使用自动变量,但是可以使用模式,和$$@ $$(@D)这类特殊自动变量
 
