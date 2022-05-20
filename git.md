@@ -75,13 +75,12 @@
     git branch [-l]                                 #查看本地分支
     git branch -r                                   #查看分支
     git branch -v[v]                                #查看各分支最后一次的提交id值 -vv代表查看分支关联的远程分支
-    git branch -u origin/locale                     #设置分支跟踪状态
     git branch --merged/--no-merged                 #查看已经合并/未合并到本地的分支
     git branch --set-upstream-to/--track ***master origin/master***                  #设置本地仓库与远程仓库间的映射
 
 
     git tag v1.0 HEAD                                                                #为指定提交点建立tag,tag不支持移动,可以切换,但会使HEAD游离,不能commit提交,不像分支一样易变,如果不指定提交hash会默认为HEAD
-    git describe ***ref**                                                            #查询指定分支的描述,<tag><num><ref>,为tag,间隔了几次提交,当前的commit hash
+    git describe ***ref**                                                            #查询指定分支的描述,<tag><num><ref>,为tag,间隔了几次提交,当前的commit hash,用于tag
 
     git push -u origin master                                                        #将当前分支上传至服务器,没有则创建.
     git push origin main                                                             #将本地分支推送到服务器的指定分支上
