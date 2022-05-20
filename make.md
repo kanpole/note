@@ -60,7 +60,8 @@
     ```c
         file         #加载程序
         list         #查看源码
-        display      #查看汇编
+        display /20i $pc      #只能查看正在运行处的20条汇编
+        disassemble func      #查看指定函数的汇编
         break        #下断点
         break if     #条件断点
         info         #查看

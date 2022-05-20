@@ -1,7 +1,51 @@
+#+TITLE: 一些问题及操作简记
+
 * 禁用UAC，使所有操作都默认为管理员
 ** HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
 *** 目前最有效
+    
 * 启用管理员账户
 ** net user administrator active:yes
-*** 可以开启管理员账户，并登陆
+   可以开启管理员账户，并登陆
+
+* 删除无权限的文件
+
+  #+begin_src:
+  //使用管理员账户夺取权限
+  takeown /f c:\data\test\ /a /r /d y
+
+  //赋值管理员账户所有权限
+  cacls c:\data\test\*.* /T /G administrators:F /e
+
+  删除文件和文件夹
+  del /s /f /q c:\data\test
+
+  rmdir /s /q c:\data\test
+
+
+
+  一些有用的命令
+  takeown cacls del rmdir dirquota fsutil
+
+  一个脚本
+
+  @echo off
+  #删除关于文件夹test1的配额设置
+  dirquota quota delete /Path:D:\Data\test1 /Quiet
+  #将文件夹test1的拥有者改为administator
+  takeown /f D:\Data\test1 /a /r /d y
+  #将文件夹test1,给administator赋予所有权
+  cacls D:\Data\test1\*.* /T /G administrators:F /e
+  #删除文件夹test1里所有文件
+  del /s /f /q D:\Data\test1
+  #删除文件夹test1里所有的文件夹
+  rmdir /s /q D:\Data\test1
+  pause
+  
+  
+  #+end_src:
+
+
+
+
 
