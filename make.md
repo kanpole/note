@@ -11,7 +11,7 @@
     + gcc -E  #预编译 .i
     + gcc -S  #汇编  .s
     + gcc -c  #生成编译文件，但不链接 .o
-    
+    + clang -v #编译的时候带此参数可以显示编译时候使用的选项
     ```shell
     
         常用参数：
@@ -60,11 +60,13 @@
     ```c
         file         #加载程序
         list         #查看源码
+        run/start    #run表示运行,start表示执行到第一句自动断下
         display /20i $pc      #只能查看正在运行处的20条汇编
         disassemble func      #查看指定函数的汇编
         break        #下断点
         break if     #条件断点
         info         #查看
+        info proc map #显示内存映射
         watch expr   #监视表达式，发生变时中断
         delete       #删除断点
         continue     #继续执行到下个断点
@@ -110,7 +112,6 @@
   MAKEFILES                               #此环境变量会在make执行时,优先读取,并且不会报错也不会作为终极目标
   MAKEFILE_LIST                           #这个变量存储了makefile链表,最后一个表示当前的mk文件
   
-  %::force;                               #模式规则，表示所有目标，优先级最低,双冒号表示最终规则,如果没有依赖不会去查找隐含规则
    
   缺省规则,目标与所有现有规则都不匹配的时候就执行此规则
   %::
@@ -173,7 +174,7 @@ stdclib:stdclib(one.o) stdclib(two.o) #表示当one.o two.o更新时,重新构建此库
 #静态规则,目标是非模式匹配的
 OBJS = main.o two.o one.h 
 
-    $(OBJS) :%.o:%.c                               #可以看成是一个目标依赖于一个模式规则
+    $(OBJS) :%.o:%.c                               #类似于目标指定变量
         gcc $< -o $@
 
 
@@ -196,17 +197,11 @@ OBJS = main.o two.o one.h
     $a                                #单字变量可以不带括号
     $abc = $(a)bc
 
-    a:a.c b.c
-    d=$(a:.c=.o)                      #d= a.o b.o快速替换，相当于函数patsubst
- or d=$(a:%.c=%.o)
- 
- 
-
-    a =b.c
-    a+=d.c                            #a本身立即展开,但是a里面的引用变量不会展开
  
     overried CFLAGS += -g             #可以防止变量被命令行修改
 
+
+    %.o:CFLAGS = -g -w                  #目标指定变量,模式指定变量,可以和其他变量同时存在，对它的修改不会影响全局，重建目标时优先使用
 
     define name
         command \                     #多行变量定义,相当于 = 定义的变量
@@ -215,7 +210,7 @@ OBJS = main.o two.o one.h
     endef
     
     
-    %.o:CFLAGS = -g -w                  #目标指定变量,模式指定变量,可以和其他变量同时存在，对它的修改不会影响全局，重建目标时优先使用
+
     
     
     ifeq ifneq ifdef ifndef else endif    #条件测试语句
@@ -435,16 +430,13 @@ $(warning text)
 
 当一个规则有目标和依赖,没有命令时,会使用对应的隐含规则,重建此目标
 当一个目标没有依赖,,会使用隐含规则重建依赖,如果此目标没有命令,也会使用隐含规则的命令重建此目标
-
-目标和依赖中不能使用自动变量,但是可以使用模式,和$$@ $$(@D)这类特殊自动变量
-
 ```
 
 
 
 
 
-### 一个完整例子
+### 一些例子
 
 ```make
 makefile
