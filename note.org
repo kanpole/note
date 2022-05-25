@@ -49,3 +49,19 @@
 
 
 
+* mysql 安装
+  删除mysql服务
+  sc delete mysql
+  根据配置使用mysql组名初始化,并重定输出消息到控制台
+  mysqld --initialize/-insecure --user=mysql --console
+  使用指定服务名和配置安装mysql
+  mysqld --install "mysql" --defaults-file="d:/mysql/my.ini"
+  启动mysql
+  net start mysql
+  登录mysql
+  mysql -hlocalhost -P3306 -uroot -pyourpassword
+  必须强制修改一次密码
+  alter user 'root'@'localhost' IDENTIFIDE with mysql_native_password by 'password';
+  刷新权限
+  flush privileges
+  
