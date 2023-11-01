@@ -8,7 +8,7 @@
 ## 对象
   * 对象有多种创建方式
   
-```
+```javascropt
     var obj = {
         name:"bob",
         age:18,
