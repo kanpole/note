@@ -1,0 +1,549 @@
+#  Common Lisp基本语法
+
+##  函数
+___
+```lisp
+
+;;无参函数
+    (defun name (parameter*)
+        "documention string"
+        body-from*
+        )
+
+
+;;;;带可选参数以及默认值的函数
+    (defun name (a b &optional c (d a d-supplied-p))  ;;d的默认值为a的值,*-supplied-p在d未被显式赋值的情况下返回nil
+        (list a b c d)
+    )
+
+
+;;;;带可变参数的函数
+    (defun name (a b &rest values)  ;;rest必须在最后,它表明将剩余参数收集到一个列表中
+        (+ values)
+    )
+
+;;;;预先获取整个参数&whole
+(defun name (&whole whole a b &rest rest)) ;;必须是第一个参数,并且它将绑定整个表达式.之后就像没有这项一样正常展开
+
+
+;;;;
+
+;;;;关键字参数
+    (defun name ( &operation d &rest value  &key a b (c 0 c-supplied-p) )  (list a b c))   ;;可以在最后面定义一个关键字参数列表,传参的时候可以指定关键字来传参数
+    (name  :b 2 :c 4 :a 6)     ;;可以无视顺序,传递参数
+
+    (defun name (&key ((:othername a) 0 a-supplied-p) b  c )  (list a c b))   ;;可以对关键字形参指定别名
+    (name :othername 23 :b 30 :c 45)   ;;使用关键字形参的别名传参
+
+
+;;;;立即返回
+(block name
+    ;;code
+    (return-from name (list "msg" "msgerr"))  ;;相当于return
+
+)
+
+
+;;;;函数对象
+(function name)  ;;相当于返回一个函数指针
+#'name           ;;这俩个是同一个意思,就和'是quote的简写一样
+
+(funcall #'name  1 2 3 4)  ;;调用一个函数对象,并将后面的参数传递给这个对象
+(apply #'name #'exp (list 1 2 3 4)) ;;循环的将列表中的每一项,传递给前面提供的每个函数对象
+
+((lambda (x y) (+ x y))  5 4)     ;;可以像这样定义一个lambda表达式并使用,也可以对它使用取函数对象 #'(lambda ...)
+
+
+```
+
+
+## 变量
+___
+- 变量无类型
+- 有词法作用域和全局作用域(动态变量)
+- 词法变量是局部的,可以对它重新绑定新对象.  词法的变量作用域是局部的,因此不会对其他调用该函数造成影响,除非修改绑定对象的值
+- 函数几乎都是按引用传递的
+- 变量可以有多重绑定,互不影响
+
+-  `**let**` 特殊符号
+
+```lisp
+
+(let (variable*)
+    body-from*
+)
+
+(let ((a 12) (b 13) c)
+    ;;变量a,b,c仅在作用域内被赋予新值,离开作用域后,将恢复原来的值
+)
+
+(let* ((x 10)  (y (+ x 21)))
+    ;;可以在绑定的参数列表中求值表达式,let则不行,它的变量只能用在body部分
+    ;;但是要注意,是在let中,如果let重新绑定的变量包含了全局变量的同名变量,并且内部使用setf对这个同名变量赋值时,不会影响外部全局变量
+)
+
+```
+
+- 闭包,将局部变量封存,并永久存储,外部无法访问,但是整个闭包内却可以
+
+```lisp
+
+
+(defparameter *fun* (let ((count 0))
+    (setf count #'(lambda ()  (+ 1 count)))
+))
+
+(funcall *fun*)   ;;每次调用这个函数时,内容都将自增1,但是对外界的count无影响
+
+```
+
+- **defvar** , **defparameter** 定义全局变量
+
+```lisp
+
+;;这个关键字只有在变量未定义的时候才会定义,而另一个总是会重新定义变量
+(defvar *count* 0
+    "describesion"
+) 
+
+
+;;定义常量,逻辑上无法被重新绑定,但其实还是可以对其重新求值来重定义
+(defconstant +name+
+    "describesion"
+)
+
+
+```
+
+- **setf** , **setq** 赋值
+
+```lisp
+;;setf底层调用setq,setf是一个宏,而setq是关键字
+(setf x 1 y 2)   ;;可以多重赋值,也可以嵌套使用
+(setq 'a 331)    ;;只能使用原生符号来定义
+
+
+```
+
+##  定义宏
+___
+ 
+
+
+## 向量
+___
+
+```lisp
+
+创建一个大小为5,向量的当前长度为0,使用字符填充的变长向量
+(setf mystr (make-array 5 :fill-pointer 0 :adjustable t :element-type 'character))
+
+```
+
+
+
+# 关键字和宏
+___
+
+- totatef    ;;宏,从左到右依次交换变量的值,在当前位置进行宏展开
+- shiftf       ;;宏,相当于左位移
+- if 条件分支关键字
+
+>(if (eq a 1)   then-form   [else-form])
+
+- progn关键字,执行一些列语句
+
+```lisp
+    (if (eq a 2) 
+        (progn 
+            (fun 1)
+            (fun 2)
+        )
+    )
+
+```
+- when宏和unless宏,一次判真,执行之后的一些列表达式,而unless则是判假执行
+```lisp
+(when (eq a 3)
+    (fun 1)
+    (fun 2)
+    ...
+
+)
+
+=> ;;等同于
+
+(defmacro when (condition &rest body)
+    `(if ,condition (progn ,@body))
+)
+
+
+
+```
+
+- cond 多else分支宏
+```lisp
+;;依次对表达式求值,知道遇到一个真,就求值分支表达式,然后返回
+(cond 
+    (a (func 1))
+    (b (func 2))
+    ...
+)
+
+```
+
+- and ,or ,not宏
+
+```lisp
+(and (= 3 2) (< 5 6))
+(or (< 4 6) (> 5 8))
+(not (> 7 9))
+
+```
+
+-do  ,dolist ,dotimes ,loop
+
+```lisp
+
+;;对列表依次求值并赋值给x
+(dolist (x '(1 2 3))
+    (print x)
+    (return) ;;返回
+)
+
+(dotimes (i 4)
+    (print i)
+)
+
+(do (variales-definitions*)  ;;每一个变量列表都是(var init-form step-form)
+
+    (end-test-form result-form*)   ;;测试与结果((= a 5) (msg "result"))
+    statement                      ;;只要上个式子测试不通过就会执行接下来的一系列语句
+)
+ 
+ =>
+ 
+(do ((var 0 (+ 1 var))
+    ((= var 10) (msg "result")))
+    (print var);
+)
+    
+(loop 
+    body-form*)  ;;无限循环
+    
+
+```
+
+## 定义宏
+
+```lisp
+(defmacro name (parameter*)
+    "describle"
+    body-form*)
+    
+(defmacro fun((var start end)  &body body)  ;;&body和&rest是相同的效果,只不过@body更能表达宏的意思
+    "this is fun"
+    `(do ((,var ,start (1+ ,var)))  ((> ,var ,end))  ;;之所以可以这样是因为宏里面可以只有映射参数列表,还有一个好处就是可以限制参数列表数目
+    ,@body    ;;  ,@表示将列表解构到括号外.而,表示对后面的变量立即求值
+    )
+)
+    
+(macroexpand-1 macro) ;;返回宏展开后的形式
+
+
+(gensym) ;;返回一个唯一的符号,并且是在宏阶段展开,所以可以用在宏里面
+(defmacro fun (var &body fun)
+
+(let (name (gensym))
+    (setf ,name var)
+    `(append '(,fun) '(,name))  ;;`反引号表示(append不要立即解析 而','表示需要理解解析 ',@'表示将结果输出到列表外部
+))
+
+
+```
+
+
+## 函数使用
+
++ format
+```c++
+
+(format t "~%")
+~% ;;表示打印一个换行,不消耗参数,总是无条件打印
+~& ;;只有在不是新行的情况下才会产生换行
+
+
+~5$ 打印浮点数,默认两位小数,前导数字5表示打印五位小数
+(format t "~v$" 3 pi) -> 3.141 ;;将打印三位小数,v表示消耗一个参数来表示前导参数
+(format t "~#$" pi) -> 3.1  ;;#表示,前导参数初始化为参数的个数
+(format t "~3,5$" pi) ;;逗号的两边表示浮点左右的精度
+(format t "~:@d" 1000000) ->+1,000,000 ;;冒号表示每三位用逗号分割,@表示数字为正时带上+号
+
+~a ;;格式化任意类型的参数,并美化输出
+
+~s ;;格式化任意类型的参数,并打印成可读的形式
+
+上面的大多数参数都可以前置参数,用来控制行为
+
+~c  ;;打印单个字符
+(format "~:c" #\ ) -> space  ;;冒号表示将不可打印的字符转换成它们的名字输出
+(format "~@c" #\a) -> #\a    ;;表示按照lisp的内部表示形式打印字符
+
+
+;;数值型打印符号
+d 十进制   x 十六进制 o 八进制 b 二进制 
+
+(format "~5,'cd" 100)->cc100 ;;这将打印前导字符
+
+;;当要跨越参数某个前导参数时,需要使用,来代替忽略的参数
+
+~r是通用进制符号,第一个参数是指定进制2-36
+如果r不带进制数,那么它打印英语指令
+
+;;浮点数值打印
+f 浮点
+e 以科学计数法打印
+g 通用的打印,组合了 f e
+$ f的特化
+
+;;文本输出指令~,包含在两个~(~a~)之间的指令都会被当作小写
+
+
+;;条件指令~[ ~],由~;分割
+(format t "~[cero~;error~;help~:;ccc~]" 1) -> error ;;通过后面的所以选择输出,如果超出索引,将打印默认的ccc
+
+(format t "~:[fail~;seccus~]" result)  ;;~:[类似于三元运算符
+(format t "~@[x= ~a~] t)   ;;如果后面的值不为nil则将值赋值给x
+
+;;循环指令~{ ~}
+
+(format "~@{~a~^,~:}" 1 2 3)-> 1,2,3 ;;~^表示没有元素之后立即停止不要打印后面的,. 前面的~@表示将后面的参数视为一个列表整体,~:}表示列表就算是空的也会运行一次
+
+;;参数复用指令
+(format "~a,~2@*~2:*~a" 1 2 3 4) -> 1,1 ;;~*表示跳过参数,~:*表示向左跳,默认向右跳,~2@* 表示一次跳过多个,默认是1
+
+
+```
+
+
+# 25个特殊操作符
++ 控制求值
+    - quote   ;;不求职得到表达式本体
+    - if            ;;分支
+    - or          ;;分支
+    - cond     ;; switch 分支
+    - progn   ;;组合求值表达式为一个整体
+
++ 维护词法环境
+  - let            ;;绑定变量到局部环境
+  - let*          ;;可以使用表达式绑定前一个变量
+  - setq         ;; 设置变量的值,如果变量不存在就报错
+  - defun      ;;定义函数
+  - lambda   ;;lambda表达式
+  
+  - flet           ;;创建局部函数,定义时不能递归调用自己
+  - labels      ;;创建局部函数,这俩提供比lambda更复杂的局部函数  ,可以立即生效,也就是定义时可以递归调用自己.除此之外它们的使用方式是相同的
+  ```lisp
+  (flet (function-definition*)
+      body-form*
+  )
+
+  (labels (function-definition*)
+      body-form*
+  )
+
+    function-definition -> (name (parameter*) from*)
+
+
+(defun name (file)
+    (labels ((myfun (mfile) (find (myfun mfile))))   ;;在定义时调用自己
+        (myfun file)
+    )
+)
+
+
+
+
+  ```
+  
+  - macrolet      ;;创建局部宏,和上面两个一样的使用方式,并且工作方式与定义全局宏一样
+  
+  
+  - symbol-macrolet     ;;创建符号宏,符号宏在使用时,不用带括号,可以之间展开成宏的定义形式,不接受任何参数
+  ```lisp
+  (defun name (file)
+      (symbol-macrolet
+        (
+            (x (show one))
+            (y (show two))
+        )
+      (list x y)      ;;x和y将被相应的宏替换
+      )
+  )
+  
+  ```
+  
+  - define-symbol-macro  ;;全局符号宏
+  
++ 局部控制流,这些控制结构可以创建出闭包
+- block 
+```lisp
+(block name
+  form*
+  (return-from name nil)  ;;立即从指定名称的block中返回
+)
+```
+- return-from ;;return-from和block一起使用可以立即从一段代码中返回.并且可以跨作用域返回
+
+- tagbody   ;;和go一样使用,用来跳转
+```lisp
+(tagbody
+  top
+  (print 'helleo)
+  (go bottom)
+  bottom
+  (print 'end)
+)
+
+```
+- go ;;与tagbody一起使用 
+
+
+- catch 
+
+- throw   ;;这俩特殊符的行为和block  return-from 类似,只是它们是动态判断的,可以跨作用域捕捉.catch可以捕捉任何throw的返回
+```lisp
+(defun name () 
+(catch *obj*
+(other))
+(print 'end))
+
+(defun other () 
+(throw *obj* nil))
+
+```
+
+- unwind-protect   ;;相当于finally无论上面的那些如何跳转,这里的代码总是会被执行
+```lisp
+(unwind-protect protected-form
+    cleanup-form*
+)
+
+(unwind-protect 
+    (progn (print 'hello) (print 'world) (return))
+    (fun1)   ;;就算返回这些func函数还是会执行
+    (fun2)
+)
+
+
+
+```
+
++ 多值
+
+- multiple-value-bind  ;;绑定多返回值
+> (multiple-value-bind (value1 value2)  (values 5 6))
+- multiple-value-call  多返回值调用,使用一个函数返回的多值去调用第一个函数
+```lisp
+
+(values 1 2)  ;;接受可变数量的值,并将它们作为多值返回
+(values-list '(3 4))  ;;接受一个列表,作为多值返回
+
+(funcall #'+ (values 1 2) (values 3 4)) -> #'(+ 1 3) ->4
+(multiple-value-call #'+(values 1 2) (values 3 4)) -> 10
+
+(setf (values x y) (floor (/ 57 34)))  -> x=1 y=23/34   ;;可以一次绑定多个值
+```
+
++ eval-when   ;;控制表达式何时被求值
+
+- eval-when
+```lisp
+(eval-when (flage*)
+
+    body-form*
+)
+
+flage可以是:
+:compile-toplevel ;;编译的时候求值
+:load-toplevel    ;;加载的时候求值
+:execute          ;;不编译直接执行源代码的时候求值
+如果混用上面的flage那么同样的代码将在多种情形下求值一次
+
+
+```
+
+-  load   ;;加载文件并求值顶层形式,包括宏的调用展开
+> (load "file.fasl")
+- compile-file   ;;编译一个lisp文件但不求值,但是会求值宏展开和in-package的包命名,只有在load加载编译后的文件时才会求值
+
+- 相对与wval-when中的表达式而言的求值时机如下
+> 只编译不求值,只求值外层,不经过编译直接加载时求值
+
++ 其他
+
+- locally
+
+- the    ;;这俩是声明系统的一部分,用来产生优化代码
+
+-load-time-value   ;;在编译后的代码中,之后求值其子表达式一次,未编译时,每次求值它时都会求值其子表达式
+
+-progv    ;;创建一个在运行期确定参数符号名字的动态绑定
+
+
+## 包
+
+;;查找包
++ find-package,在包中查找符号,失败返回nil
+> (find-package "a" *package*)
+
++ intern 同上,失败则创建
+
+name                                      ;;表示使用本包中的名字
+:name                                     ;;表示使用外部包中的名字
+*package*::name                 ;;表示使用某个包中的名字
+#:name                                   ;;不进入任何包的符号,每次读取它的时候都是一个全新的符号,无法被读取,只是一种表示,用完就仍了,不存入符号表
+> (eql '#:foo '#:foo)  -> nil
+
+:以冒号开头的名字一般在keyword包中
+>(eql :a keyword:a) -> T
+
+
+
++ (symbol-name  :key) -> "KEY"  ;;返回一个符号的名字
+
++package-name , package-list
+> (mapcar  #'package-name (package-use-list :cl-use)) ;;返回当前所使用的所有包
+>(package-name  (symbol-package 'defun))   ;;查询当前符号来自哪个包
+
+
++定义包
+```lisp
+;;定义了一个包名为com.name,继承了common-lisp包
+(defpackage  :com.name    ;;defpackage宏进行的操作,可以由那些管理包对象的函数来完成
+    (:use :common-lisp)
+    (:export :open        ;;导出这些函数,供其他继承的包直接使用
+             :save
+             :store)
+    (:import-from :com.other  :send :exec)     ;;导出指定包的的某些符号,可以包含多个import-from
+    (:shadow :buildfun)                 ;;隐藏某个符号,将创建一个新的对应符号,这个符号会添加到当前的包中,所有使用这个符号的情况都将从当前符号表读取
+    (:shadowing-import-from :com.three :sort :math)  ;;当导入的包存在某些同名函数时,使用这个表示要引入哪个包的函数
+)
+    
+
+;;切换包环境,以便读取
+(in-package :com.name)
+(use-package :cl)     ;;使用某个包环境,但是不切换包
+
+
+```
+
+
+## 预定义符号
+*package*  ;;当前的包名
+
+common-lisp  ;;基础包
+common-lisp-user or cl-user  ;;用户包
+
+*readtable*   ;;全局变量表
+
