@@ -17,3 +17,26 @@
     }
     
 ```
+  * 另一种是在一个函数里面构造对象然后将对象返回
+```
+  function createObj(name){
+      const obj = {};
+      obj.name = name;
+      obj.show = () => {...};
+      return obj;
+  }
+
+```
+  * 上面的方式可以简化,通过new创建一个对象
+```
+  function Obj(name){
+      this.name = name;
+      this.show = ()=>{...};
+  }
+
+let obj = new Obj("bob");
+
+```
+
+> 创建完成的对象可以继续往里面添加属性。
+
